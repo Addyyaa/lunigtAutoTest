@@ -1,0 +1,20 @@
+{
+    "default": {
+        "platformName": "Android",
+        "automationName": "UiAutomator2",
+        "deviceName": "Android Emulator",
+        "appPackage": "com.ost.lunight",
+        "appActivity": "io.dcloud.PandoraEntry",
+        "noReset": true,
+        "newCommandTimeout": 120,
+        "waitForIdleTimeout": 0,
+        "ignoreUnimportantViews": true
+    },
+    "ci": {
+        "platformName": "Android",
+        "automationName": "UiAutomator2",
+        "deviceName": "emulator-5554",
+        "noReset": true,
+        "newCommandTimeout": 120
+    }
+}

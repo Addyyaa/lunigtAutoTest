@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+.venv*/
+.env
+.env.*
+
+# IDE / Editor
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test & Coverage
+.pytest_cache/
+.coverage*
+htmlcov/
+.tox/
+.mypy_cache/
+
+# Reports
+reports/
+allure-results/
+allure-report/
+logs/
+
+# Build
+build/
+dist/
+
+# Misc
+*.log

@@ -1,0 +1,16 @@
+# Runtime
+appium-python-client>=3.3.0
+selenium>=4.24.0
+PyYAML>=6.0.2
+python-dotenv>=1.0.1
+allure-pytest>=2.13.5
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Quality
+pylint>=3.2.0
+black>=24.3.0
+isort>=5.13.2
+ruff>=0.4.5
+mypy>=1.10.0
+pre-commit>=3.7.0

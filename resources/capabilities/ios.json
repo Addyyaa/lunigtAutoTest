@@ -1,0 +1,20 @@
+{
+    "default": {
+        "platformName": "iOS",
+        "automationName": "XCUITest",
+        "deviceName": "iPhone 15",
+        "platformVersion": "17.0",
+        "bundleId": "com.apple.Preferences",
+        "noReset": true,
+        "newCommandTimeout": 120
+    },
+    "ci": {
+        "platformName": "iOS",
+        "automationName": "XCUITest",
+        "deviceName": "iPhone 14",
+        "platformVersion": "16.4",
+        "bundleId": "com.apple.Preferences",
+        "noReset": true,
+        "newCommandTimeout": 120
+    }
+}
