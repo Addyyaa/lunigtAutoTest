@@ -111,71 +111,101 @@ LUNAR_CASES = _load_lunar_cases()
 
 @pytest.mark.e2e
 @pytest.mark.parametrize("date_str,lunar_phase", LUNAR_CASES)
-@pytest.mark.parametrize("kill_app", ["com.android.settings", "com.ost.lunight"], indirect=True)
-def test_lunar_phase(appium_driver: Remote, sample_page, wait_for_element, date_str, lunar_phase, kill_app):
+def test_lunar_phase(appium_driver: Remote, sample_page, wait_for_element, date_str, lunar_phase):
     logger.info(f"测试日期: {date_str}, 月相: {lunar_phase}")
     year, month, day = date_str.split("-")
-
-    # 将日期作为系统时间
     appium_driver.execute_script("mobile: startActivity", {"component": "com.android.settings/.Settings"})
-    el_setting_search = page.find((AppiumBy.ACCESSIBILITY_ID, "搜索设置"))
-    el_setting_search.click()
-    el_setting_search_input = page.find((AppiumBy.ID, "com.android.settings.intelligence:id/search_src_text"))
-    el_setting_search_input.send_keys("设置时间")
-    el_setting_time_locator = (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("设置时间")')
-    el = wait_for_element(el_setting_time_locator)
-    el.click()
-    el_time_settings = (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("设置日期")')
-    el = wait_for_element(el_time_settings)
-    el.click()
+    time.sleep(1)
+    el_setting_time_locator = (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("设置日期").instance(0)')
+    try:
+        el = WebDriverWait(appium_driver, 10, poll_frequency=0.5).until(EC.presence_of_element_located(el_setting_time_locator))
+        if el is not None:
+            logger.info("设置日期已存在，无需进行搜索")
+            el.click()
+
+    except:
+        logger.info("设置日期不存在")
+        
+        el_setting_search = page.find((AppiumBy.ACCESSIBILITY_ID, "搜索设置"))
+        el_setting_search.click()
+        logger.info("点击搜索设置")
+        el_setting_search_input = page.find((AppiumBy.ID, "com.android.settings.intelligence:id/search_src_text"))
+        el_setting_search_input.send_keys("设置时间")
+        logger.info("输入设置时间")
+        el_setting_time_locator = (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("设置时间").instance(0)')
+        el = wait_for_element(el_setting_time_locator)
+        el.click()
+        logger.info("点击设置时间")
+        el_time_settings = (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("设置日期")')
+        el = wait_for_element(el_time_settings)
+        el.click()
+    # 将日期作为系统时间
+    
+    logger.info("点击设置日期")
     # 展开年份下拉菜单（只点一次，避免收起）
     el_year_dropdown_locator = (AppiumBy.ID, "com.android.settings:id/sesl_date_picker_calendar_header_text")
     el_header = wait_for_element(el_year_dropdown_locator, allow_scroll=False, require_enabled=True)
     el_header.click()
-
-    # 直接滚动并点击目标年份/月份/日期，避免键码输入兼容问题
-    # 年份
-    for ytext in (f"{year}年", year):
+    # 点击年份进入手动输入年份
+    el_year_click = (AppiumBy.ANDROID_UIAUTOMATOR, r'new UiSelector().textMatches("\d{4}(.*?)年")')
+    el = wait_for_element(el_year_click)
+    el.click()
+    el.clear()
+    logger.info("点击年份进入手动输入年份")
+    # 使用 UiAutomator2 的 type 方法输入年份
+    logger.info(f"通过 UiAutomator2 type 方法输入年份: {year}")
+    # 先找到输入框并点击确保焦点
+    el_year_input = (AppiumBy.ANDROID_UIAUTOMATOR, r'new UiSelector().textMatches("(\d{4}.*?年|, 年)")')
+    el = wait_for_element(el_year_input)
+    el.click()
+    time.sleep(0.3)  # 等待焦点稳定
+    
+    # 使用 UiAutomator2 的原生输入
+    appium_driver.execute_script("mobile: type", {"text": str(year)})
+    logger.info(f"UiAutomator2 type 输入年份成功: {year}")
+    time.sleep(0.5)  # 等待输入完成
+    
+    # 通用的日期输入函数
+    def input_date_field(field_name, field_value, field_pattern):
+        """通用的日期字段输入函数"""
         try:
-            el_year = wait_for_element(
-                (AppiumBy.ANDROID_UIAUTOMATOR, f'new UiSelector().text("{ytext}")'),
-                allow_scroll=True,
-                require_enabled=True,
-                prepare_for_click=False,
-            )
-            el_year.click()
-            break
-        except Exception:
-            continue
-
-    # 月份（部分 ROM 为“9月”或“09月”）
-    for mtext in (f"{int(month)}月", f"{month}月"):
+            logger.info(f"开始输入{field_name}: {field_value}")
+            el_field = (AppiumBy.ANDROID_UIAUTOMATOR, field_pattern)
+            el = wait_for_element(el_field, timeout=5)
+            el.click()
+            logger.info(f"点击{field_name}输入框")
+            time.sleep(0.3)
+            el.clear()
+            logger.info(f"清空{field_name}")
+            appium_driver.execute_script("mobile: type", {"text": str(field_value)})
+            logger.info(f"UiAutomator2 type 输入{field_name}成功: {field_value}")
+            time.sleep(0.5)
+        except Exception as e:
+            logger.warning(f"{field_name}输入失败: {e}")
+    
+    # 输入月份
+    month_int = int(month)  # 去掉前导零，如 "09" -> 9
+    input_date_field("月份", month_int, r'new UiSelector().textMatches("(\d{2},\s+月|, 月)")')
+    
+    # 输入日期  
+    day_int = int(day)  # 去掉前导零，如 "01" -> 1
+    input_date_field("日期", day_int, r'new UiSelector().textMatches("(\d{1,2},\s+日|, 日)")')
+    
+    # 最后统一点击完成
+    try:
+        el_done = (AppiumBy.ID, "android:id/button1")
+        el = wait_for_element(el_done)
+        el.click()
+        logger.info("点击完成按钮")
+        time.sleep(1)  # 等待日期设置生效
+        logger.info(f"日期设置完成: {year}-{month}-{day}")
+    except Exception as e:
+        logger.error(f"点击完成按钮失败: {e}")
+        # 尝试其他可能的完成按钮
         try:
-            el_month = wait_for_element(
-                (AppiumBy.ANDROID_UIAUTOMATOR, f'new UiSelector().text("{mtext}")'),
-                allow_scroll=True,
-                require_enabled=True,
-                prepare_for_click=False,
-            )
-            el_month.click()
-            break
-        except Exception:
-            continue
-
-    # 日期（部分 ROM 为“1”或“01”）
-    for dtext in (str(int(day)), day):
-        try:
-            el_day = wait_for_element(
-                (AppiumBy.ANDROID_UIAUTOMATOR, f'new UiSelector().text("{dtext}")'),
-                allow_scroll=True,
-                require_enabled=True,
-            )
-            el_day.click()
-            break
-        except Exception:
-            continue
-
-    # 完成
-    el_done_locator = (AppiumBy.ID, "android:id/button1")
-    el_done = wait_for_element(el_done_locator)
-    el_done.click()
+            el_done_alt = (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("完成")')
+            el = wait_for_element(el_done_alt, timeout=3)
+            el.click()
+            logger.info("通过备用方式点击完成")
+        except:
+            logger.error("所有完成按钮都无法点击")

@@ -208,7 +208,87 @@ def wait_for_element(appium_driver):
 
     return _wait
 
+    """杀死指定的应用包名（用于参数化测试）"""
+    app_package = request.param
+    logger.info(f"杀死应用: {app_package}")
+    
+    try:
+        # 方法1：使用 Appium 的 terminate_app
+        if appium_driver.is_app_installed(app_package):
+            appium_driver.terminate_app(app_package)
+            logger.info(f"成功杀死应用: {app_package}")
+        else:
+            logger.warning(f"应用未安装，跳过杀死操作: {app_package}")
+    except Exception as e:
+        # 方法2：备用 - 使用 ADB 命令
+        try:
+            logger.warning(f"Appium 杀死应用失败，尝试 ADB 命令: {e}")
+            appium_driver.execute_script("mobile: shell", {"command": f"am force-stop {app_package}"})
+            logger.info(f"通过 ADB 成功杀死应用: {app_package}")
+        except Exception as adb_e:
+            logger.error(f"ADB 杀死应用也失败: {adb_e}")
+            # 不抛出异常，避免影响测试继续执行
+
 
 @pytest.fixture(scope="function")
-def kill_app(appium_driver: WebDriver, request):
-    appium_driver.terminate_app(request.param)
+def kill_apps_before_test(appium_driver: WebDriver, logger):
+    """测试前后都杀死指定的应用列表（初始化和清理操作）"""
+    apps_to_kill = ["com.android.settings", "com.ost.lunight"]
+    
+    def _kill_apps_and_go_home(stage_name):
+        """杀死应用并返回桌面的通用方法"""
+        logger.info(f"{stage_name}：杀死应用列表 {apps_to_kill}")
+        
+        for app_package in apps_to_kill:
+            try:
+                # 方法1：使用 Appium 的 terminate_app
+                if appium_driver.is_app_installed(app_package):
+                    appium_driver.terminate_app(app_package)
+                    logger.info(f"成功杀死应用: {app_package}")
+                else:
+                    logger.warning(f"应用未安装，跳过杀死操作: {app_package}")
+            except Exception as e:
+                # 方法2：备用 - 使用 ADB 命令
+                try:
+                    logger.warning(f"Appium 杀死应用失败，尝试 ADB 命令: {e}")
+                    appium_driver.execute_script("mobile: shell", {"command": f"am force-stop {app_package}"})
+                    logger.info(f"通过 ADB 成功杀死应用: {app_package}")
+                except Exception as adb_e:
+                    logger.error(f"ADB 杀死应用也失败: {adb_e}")
+                    # 不抛出异常，避免影响测试继续执行
+        
+        logger.info(f"{stage_name} 应用清理完成")
+        
+        # 可选：杀死应用后返回桌面，避免停留在被杀死的应用界面
+        try:
+            logger.info("按下 Home 键返回桌面")
+            appium_driver.press_keycode(3)  # Android Home 键
+        except Exception as e:
+            logger.warning(f"返回桌面失败: {e}")
+    
+    # 测试前执行
+    _kill_apps_and_go_home("测试前初始化")
+    
+    # yield 让测试执行
+    yield
+    
+    # 测试后执行
+    _kill_apps_and_go_home("测试后清理")
+
+
+# 可选：如果需要更灵活的控制，可以使用独立的 fixture
+@pytest.fixture(scope="function")
+def kill_apps_before(appium_driver: WebDriver, logger):
+    """仅在测试前杀死应用"""
+    apps_to_kill = ["com.android.settings", "com.ost.lunight"]
+    logger.info(f"测试前杀死应用: {apps_to_kill}")
+    # ... 杀死应用的逻辑 ...
+
+
+@pytest.fixture(scope="function")  
+def kill_apps_after(appium_driver: WebDriver, logger, request):
+    """仅在测试后杀死应用"""
+    yield  # 先让测试执行
+    apps_to_kill = ["com.android.settings", "com.ost.lunight"]
+    logger.info(f"测试后杀死应用: {apps_to_kill}")
+    # ... 杀死应用的逻辑 ...

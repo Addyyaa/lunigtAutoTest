@@ -8,7 +8,9 @@
         "noReset": true,
         "newCommandTimeout": 120,
         "waitForIdleTimeout": 0,
-        "ignoreUnimportantViews": true
+        "ignoreUnimportantViews": true,
+        "appium:appium:forceAppLaunch": true,
+        "appium:appium:intentFlags": "0x10200000"
     },
     "ci": {
         "platformName": "Android",
