@@ -13,6 +13,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import numpy as np
 import json
 from appium.webdriver.common.appiumby import AppiumBy
+from selenium.webdriver.remote.webelement import WebElement
 
 from appium.webdriver import Remote
 from selenium.common.exceptions import WebDriverException
@@ -64,8 +65,8 @@ def test_get_element_presence(appium_driver):
             logger.info("Home element is not present")
             pytest.fail("首页tab不存在，无法进入首页")
 
-    except:
-        logger.info("Home element is not present")
+    except Exception as e:
+        logger.info(f"Home element is not present: {e}")
     el = page.find((By.XPATH, "(//android.view.View[@resource-id])[1]"))
     base_dir = os.path.dirname(os.path.abspath(__file__))
     screenshot_dir = os.path.join(base_dir, "screenshots")
@@ -91,10 +92,6 @@ def test_get_element_presence(appium_driver):
 data_file = os.path.join(os.path.dirname(__file__), "..", "src", "test_data", "data.json")
 
 
-def get_lunar_phase_data(json_data):
-    return json_data["lunar phase"]
-
-
 def _load_lunar_cases():
     data_file = os.path.join(os.path.dirname(__file__), "..", "..", "src", "test_data", "data.json")
     with open(data_file, "r", encoding="utf-8") as f:
@@ -106,7 +103,18 @@ def _load_lunar_cases():
     return cases
 
 
+def _load_birth_chart_cases():
+    data_file = os.path.join(os.path.dirname(__file__), "..", "..", "src", "test_data", "data.json")
+    with open(data_file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    cases = []
+    for item in data["birth_chart"]:
+        cases.append(item)
+    return cases
+
+
 LUNAR_CASES = _load_lunar_cases()
+BIRTH_CHART_CASES = _load_birth_chart_cases()
 
 
 def cold_launch(appium_driver: Remote, package: str, activity: str):
@@ -167,7 +175,7 @@ def get_lunar_app_moon_image(appium_driver: Remote, lunar_phase: str, save_path:
 
 @pytest.mark.e2e
 @pytest.mark.parametrize("date_str,lunar_phase", LUNAR_CASES)
-def test_lunar_phase(appium_driver: Remote, sample_page, wait_for_element, date_str, lunar_phase):
+def test_lunar_phase(appium_driver: Remote, wait_for_element, date_str, lunar_phase):
     logger.info(f"测试日期: {date_str}, 月相: {lunar_phase}")
     year, month, day = date_str.split("-")
     appium_driver.execute_script("mobile: startActivity", {"component": "com.android.settings/.Settings"})
@@ -264,8 +272,8 @@ def test_lunar_phase(appium_driver: Remote, sample_page, wait_for_element, date_
             el = wait_for_element(el_done_alt, timeout=3)
             el.click()
             logger.info("通过备用方式点击完成")
-        except Exception as e:
-            logger.error(f"所有完成按钮都无法点击: {e}")
+        except Exception as e1:
+            logger.error(f"所有完成按钮都无法点击: {e1}")
 
     # 调用截取图片函数
     lunar_bytes = get_lunar_app_moon_image(appium_driver, lunar_phase, save_path=False)
@@ -276,3 +284,41 @@ def test_lunar_phase(appium_driver: Remote, sample_page, wait_for_element, date_
     except Exception as e:
         logger.error(f"月相对比失败: {e}")
         pytest.fail(f"月相对比失败: {e}")
+
+
+@pytest.mark.e2e
+@pytest.mark.skip(
+    reason="由于生日控件没有可以定位的元素，且需要滚动选择时间，也无法通过任何手段定位到当前聚焦的时间，测试跳过"
+)
+@pytest.mark.parametrize("birth_chart", BIRTH_CHART_CASES)
+def test_birth_chart(appium_driver: Remote, wait_for_element, birth_chart: dict):
+    logger.info(f"测试生日: {birth_chart['birth_date']}, 出生时间: {birth_chart['birth_time']}")
+    # 进入我的页面
+    el_my = (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("mine-active")')
+    el = wait_for_element(el_my)
+    el.click()
+    logger.info("已进入我的页面")
+    # 进入本命盘页面
+    el_birth_chart = (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("›").instance(0)')
+    el = wait_for_element(el_birth_chart)
+    el.click()
+    logger.info("已进入本命盘页面")
+    # 点击编辑个人信息按钮
+    el_edit_info = (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().className("android.widget.TextView").instance(62)')
+    el = wait_for_element(el_edit_info)
+    el.click()
+    logger.info("已点击编辑个人信息按钮")
+    # 输入性别
+    el_sex = (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("性别")')
+    el = wait_for_element(el_sex)
+    el.click()
+    logger.info("已点击性别")
+    # 输入出生日期
+    el_birth_date = (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().textMatches("\d{4}-\d{2}-\d{2}")')
+    el = wait_for_element(el_birth_date)
+    el.click()
+    logger.info("已点击出生日期")
+    # 输入出生时间
+    el_birth_time = (AppiumBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("\d{4}")')
+    el: WebElement = wait_for_element(el_birth_time)
+    logger.info(f"{len(el)}\t{el.text}")

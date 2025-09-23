@@ -120,5 +120,223 @@
         {
             "2027-06-05": "waning crescent"
         }
+    ],
+    "birth_chart": [
+        {
+            "birth_date": "1990-05-12",
+            "birth_time": "09:15",
+            "continent": "亚洲",
+            "region": "中国",
+            "state": "江苏省",
+            "city": "南京市",
+            "sex": "男",
+            "emoji": "平静",
+            "relationship": "朋友",
+            "excpected": "金牛座，上升星座落于狮子座，月亮落于双鱼座"
+        },
+        {
+            "birth_date": "1988-03-21",
+            "birth_time": "14:40",
+            "continent": "亚洲",
+            "region": "日本",
+            "state": "东京都",
+            "city": "东京市",
+            "sex": "女",
+            "emoji": "开心",
+            "relationship": "恋人",
+            "excpected": "白羊座，上升星座落于天秤座，月亮落于巨蟹座"
+        },
+        {
+            "birth_date": "1995-11-07",
+            "birth_time": "07:50",
+            "continent": "亚洲",
+            "region": "印度",
+            "state": "马哈拉施特拉邦",
+            "city": "孟买市",
+            "sex": "男",
+            "emoji": "焦虑",
+            "relationship": "同事",
+            "excpected": "天蝎座，上升星座落于摩羯座，月亮落于双子座"
+        },
+        {
+            "birth_date": "1985-11-03",
+            "birth_time": "14:40",
+            "continent": "非洲",
+            "region": "埃及",
+            "state": "开罗省",
+            "city": "开罗市",
+            "sex": "女",
+            "emoji": "开心",
+            "relationship": "恋人",
+            "excpected": "天蝎座，上升星座落于摩羯座，月亮落于双子座"
+        },
+        {
+            "birth_date": "1992-06-18",
+            "birth_time": "09:25",
+            "continent": "非洲",
+            "region": "南非",
+            "state": "豪登省",
+            "city": "约翰内斯堡市",
+            "sex": "男",
+            "emoji": "平静",
+            "relationship": "朋友",
+            "excpected": "双子座，上升星座落于狮子座，月亮落于摩羯座"
+        },
+        {
+            "birth_date": "1979-09-14",
+            "birth_time": "20:05",
+            "continent": "非洲",
+            "region": "肯尼亚",
+            "state": "内罗毕省",
+            "city": "内罗毕市",
+            "sex": "女",
+            "emoji": "失落",
+            "relationship": "家人",
+            "excpected": "处女座，上升星座落于天蝎座，月亮落于摩羯座"
+        },
+        {
+            "birth_date": "1998-07-21",
+            "birth_time": "07:50",
+            "continent": "欧洲",
+            "region": "法国",
+            "state": "法兰西岛大区",
+            "city": "巴黎市",
+            "sex": "男",
+            "emoji": "焦虑",
+            "relationship": "同事",
+            "excpected": "巨蟹座，上升星座落于处女座，月亮落于射手座"
+        },
+        {
+            "birth_date": "1980-04-05",
+            "birth_time": "19:10",
+            "continent": "欧洲",
+            "region": "德国",
+            "state": "巴伐利亚州",
+            "city": "慕尼黑市",
+            "sex": "女",
+            "emoji": "开心",
+            "relationship": "同事",
+            "excpected": "白羊座，上升星座落于巨蟹座，月亮落于射手座"
+        },
+        {
+            "birth_date": "1994-12-12",
+            "birth_time": "05:55",
+            "continent": "欧洲",
+            "region": "英国",
+            "state": "英格兰",
+            "city": "伦敦市",
+            "sex": "男",
+            "emoji": "焦虑",
+            "relationship": "家人",
+            "excpected": "射手座，上升星座落于水瓶座，月亮落于金牛座"
+        },
+        {
+            "birth_date": "1979-03-15",
+            "birth_time": "20:05",
+            "continent": "北美洲",
+            "region": "美国",
+            "state": "加利福尼亚州",
+            "city": "洛杉矶市",
+            "sex": "女",
+            "emoji": "失落",
+            "relationship": "家人",
+            "excpected": "双鱼座，上升星座落于双子座，月亮落于处女座"
+        },
+        {
+            "birth_date": "1987-08-23",
+            "birth_time": "11:35",
+            "continent": "北美洲",
+            "region": "加拿大",
+            "state": "安大略省",
+            "city": "多伦多市",
+            "sex": "男",
+            "emoji": "平静",
+            "relationship": "陌生人",
+            "excpected": "处女座，上升星座落于天秤座，月亮落于摩羯座"
+        },
+        {
+            "birth_date": "1991-10-02",
+            "birth_time": "08:20",
+            "continent": "北美洲",
+            "region": "墨西哥",
+            "state": "墨西哥城",
+            "city": "墨西哥城",
+            "sex": "女",
+            "emoji": "烦躁",
+            "relationship": "朋友",
+            "excpected": "天秤座，上升星座落于摩羯座，月亮落于金牛座"
+        },
+        {
+            "birth_date": "2002-09-09",
+            "birth_time": "11:30",
+            "continent": "南美洲",
+            "region": "巴西",
+            "state": "圣保罗州",
+            "city": "圣保罗市",
+            "sex": "男",
+            "emoji": "烦躁",
+            "relationship": "陌生人",
+            "excpected": "处女座，上升星座落于天蝎座，月亮落于摩羯座"
+        },
+        {
+            "birth_date": "1984-03-15",
+            "birth_time": "19:50",
+            "continent": "南美洲",
+            "region": "阿根廷",
+            "state": "布宜诺斯艾利斯省",
+            "city": "布宜诺斯艾利斯市",
+            "sex": "男",
+            "emoji": "疲惫",
+            "relationship": "恋人",
+            "excpected": "双鱼座，上升星座落于双子座，月亮落于处女座"
+        },
+        {
+            "birth_date": "1996-05-28",
+            "birth_time": "06:45",
+            "continent": "南美洲",
+            "region": "智利",
+            "state": "圣地亚哥大区",
+            "city": "圣地亚哥市",
+            "sex": "女",
+            "emoji": "平静",
+            "relationship": "同事",
+            "excpected": "双子座，上升星座落于狮子座，月亮落于摩羯座"
+        },
+        {
+            "birth_date": "1987-01-28",
+            "birth_time": "16:45",
+            "continent": "大洋洲",
+            "region": "澳大利亚",
+            "state": "新南威尔士州",
+            "city": "悉尼市",
+            "sex": "女",
+            "emoji": "疲惫",
+            "relationship": "朋友",
+            "excpected": "水瓶座，上升星座落于白羊座，月亮落于处女座"
+        },
+        {
+            "birth_date": "1975-08-23",
+            "birth_time": "05:55",
+            "continent": "大洋洲",
+            "region": "新西兰",
+            "state": "奥克兰大区",
+            "city": "奥克兰市",
+            "sex": "男",
+            "emoji": "开心",
+            "relationship": "同事",
+            "excpected": "处女座，上升星座落于天秤座，月亮落于摩羯座"
+        },
+        {
+            "birth_date": "1993-12-05",
+            "birth_time": "13:15",
+            "continent": "大洋洲",
+            "region": "斐济",
+            "state": "中央省",
+            "city": "苏瓦市",
+            "sex": "女",
+            "emoji": "失落",
+            "relationship": "家人",
+            "excpected": "射手座，上升星座落于水瓶座，月亮落于金牛座"
+        }
     ]
 }

@@ -32,5 +32,5 @@ warn_return_any = true
 [tool.pylint.MASTER]
 ignore = ["tests"]
 
-[tool.pylint."MESSAGES CONTROL"]
-disable = ["C0114", "C0115", "C0116", "R0903"]
+[tool.pylint]
+disable = ["C0114", "C0115", "C0116", "R0903", "logging-fstring-interpolation", "no-member"]
