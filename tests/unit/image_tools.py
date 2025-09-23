@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 from typing import Any, Union
 from pathlib import Path
+import logging
 
 
 def capture_element_image(element: WebElement):
@@ -30,18 +31,25 @@ def capture_element_image(element: WebElement):
 
 
 def test_element_image_match_cv(pic_data: np.ndarray[Any, np.dtype[np.uint8]], expected_img: Union[str, Path]):
+    """
+    @param pic_data: 元素截图
+    @param expected_img: 预期图片
+    @return: 匹配度
+    """
+    logger = logging.getLogger("tests")
     if isinstance(expected_img, str):
         expected_img = Path(expected_img)
-    # 1. 转灰度
-    element_data = pic_data
+    if isinstance(pic_data, (bytes, bytearray)):
+        array = np.frombuffer(pic_data, np.uint8)
+        element_data = cv2.imdecode(array, cv2.IMREAD_GRAYSCALE)
     # 2. 模板匹配
     expected_img = cv2.imread(expected_img, cv2.IMREAD_GRAYSCALE)
     result = cv2.matchTemplate(element_data, expected_img, cv2.TM_CCOEFF_NORMED)
     _, max_val, _, _ = cv2.minMaxLoc(result)
-    print(max_val)
+    logger.info(f"图片匹配度为{max_val}")
     assert max_val > 0.8, f"图片匹配失败，匹配度为{max_val}"
 
 
 if __name__ == "__main__":
     actual_img = cv2.imread("tests\e2e\screenshots\screenshot.png", cv2.IMREAD_GRAYSCALE)
-    test_element_image_match_cv(actual_img, "src\image_to_match\moon2.png")
+    test_element_image_match_cv(actual_img, "src\image_to_match\\new moon.png")
